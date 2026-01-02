@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth cursor-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Md Asif Rahman | Senior Software Architect</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: '#2563eb', // Blue-600
+                        secondary: '#1e293b', // Slate-800
+                        dark: '#0f172a',
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',
+                        'badge': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Hide Default Cursor */
+        *, *::before, *::after { cursor: none !important; }
+
+        /* Custom Cursor Elements */
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #0f172a; }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid #0f172a; transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s; }
+        
+        /* Dark Mode Cursor */
+        .dark .cursor-dot { background-color: #ffffff; }
+        .dark .cursor-outline { border-color: #ffffff; }
+        
+        /* Hover State */
+        body.hovering .cursor-outline { width: 60px; height: 60px; background-color: rgba(37, 99, 235, 0.1); border-color: transparent; }
+
+        /* Canvas Background */
+        #network-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2; 
+            pointer-events: none;
+        }
+            /* Make the overall page background a subtle grey so glass panels read better */
+            body { background-color: #f3f4f6 !important; }
+            /* Keep dark mode unchanged when html has .dark */
+            html.dark body { background-color: #0f172a !important; }
+
+            /* Let section backgrounds be transparent so the page grey shows through */
+            #about, #arsenal, #experience, #projects, #education, #recognition { background-color: transparent !important; }
+
+        /* Subtle page background gradient that provides content for backdrop-filter to blur */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1; 
+            pointer-events: none;
+            background: radial-gradient(900px 400px at 10% 10%, rgba(99,102,241,0.15), transparent 20%), radial-gradient(800px 300px at 90% 80%, rgba(14,165,233,0.15), transparent 18%);
+        }
+
+        /* Animations */
+        .skill-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .icon-hover { transition: all 0.3s ease; display: inline-block; transform-origin: center; }
+        .group:hover > .icon-hover { transform: scale(1.2) rotate(5deg); }
+        .float-slow { animation: float 6s ease-in-out infinite; }
+        .float-delayed { animation: float 6s ease-in-out infinite 3s; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+            
+        /* 
+         * --------------------------------------------------------------------------
+         * MAC OS DOCK STYLE OVERRIDES 
+         * --------------------------------------------------------------------------
+         */
+        
+        /* Universal Glass Card Styling */
+        .glass-card,
+        #arsenal .glass-card,
+        #experience .glass-card,
+        #projects .glass-card,
+        #education .glass-card,
+        #recognition .glass-card {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            
+            /* High transparency (Mac Dock Style) */
+            background: rgba(255, 255, 255, 0.40) !important; 
+            
+            /* Strong Blur + Saturation for vibrance */
+            -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+            backdrop-filter: blur(20px) saturate(180%) !important;
+            
+            /* Subtle, crisp border */
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            
+            /* Soft shadow */
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1) !important;
+            
+            border-radius: 16px !important;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s !important;
+        }
+
+        /* Dark Mode Variant */
+        .dark .glass-card,
+        .dark #arsenal .glass-card,
+        .dark #experience .glass-card,
+        .dark #projects .glass-card,
+        .dark #education .glass-card,
+        .dark #recognition .glass-card {
+            background: rgba(0, 0, 0, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5) !important;
+        }
+
+        /* Hover Effect (Magnification feel) */
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            background: rgba(255, 255, 255, 0.25) !important; /* Slightly brighter on hover */
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.6) !important;
+        }
+
+        .dark .glass-card:hover {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+
+        /* Remove old pseudo-elements to ensure transparency */
+        .glass-card::before, .glass-card::after { display: none !important; }
+
+        /* Ensure text contrast inside transparent cards */
+        .skill-card * { background: transparent !important; }
+        .skill-card span, .group .px-2 { background: transparent !important; }
+
+        /* Specific styling for badges to match */
+        .glass-card .badge { background: rgba(255,255,255,0.2) !important; }
+
+        /* Border style for badges inside glass cards */
+        .border-t-green-500,
+        .border-t-green-500:hover{ 
+            --tw-border-opacity: 1;
+            border-top: 4px solid !important;
+            border-top-color: rgb(34 197 94 / var(--tw-border-opacity, 1)) !important;
+         }
+        .border-t-blue-500,
+        .border-t-blue-500:hover { 
+            --tw-border-opacity: 1;
+            border-top: 4px solid !important;
+            border-top-color: rgb(59 130 246 / var(--tw-border-opacity, 1)) !important;
+         }
+        .border-t-purple-500,
+        .border-t-purple-500:hover {     
+            --tw-border-opacity: 1;
+            border-top: 4px solid !important;
+            border-top-color: rgb(168 85 247 / var(--tw-border-opacity, 1)) !important; 
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 antialiased selection:bg-primary selection:text-white overflow-x-hidden transition-colors duration-300">
+
+    <canvas id="network-canvas"></canvas>
+
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <nav x-data="{ open: false }" class="fixed w-full z-50 bg-white/10 dark:bg-black/20 backdrop-blur-xl border-b border-white/20 dark:border-white/5 transition-all duration-300"
+         data-aos="fade-down" data-aos-duration="800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tighter hover:text-primary transition">
+                        itsasif<span class="text-primary">.me</span>
+                    </a>
+                </div>
+                <div class="hidden lg:flex space-x-8 items-center">
+                    <a href="#about" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition">About</a>
+                    <a href="#arsenal" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition">Arsenal</a>
+                    <a href="#experience" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition">Experience</a>
+                    <a href="#projects" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition">Projects</a>
+                    <a href="#education" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition">Education</a>
+                    
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition focus:outline-none">
+                        <i id="theme-toggle-light-icon" class="fas fa-sun text-yellow-400 hidden text-lg"></i>
+                        <i id="theme-toggle-dark-icon" class="fas fa-moon text-slate-500 hidden text-lg"></i>
+                    </button>
+
+                    <a href="#contact" class="px-5 py-2.5 rounded-lg bg-slate-900 dark:bg-primary text-white font-medium hover:bg-primary dark:hover:bg-blue-700 transition shadow-lg shadow-blue-500/20 transform hover:-translate-y-0.5">Contact Me</a>
+                </div>
+                <div class="lg:hidden flex items-center gap-4">
+                    <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i id="theme-toggle-light-icon-mobile" class="fas fa-sun text-yellow-400 hidden"></i>
+                        <i id="theme-toggle-dark-icon-mobile" class="fas fa-moon text-slate-500 hidden"></i>
+                    </button>
+                    <button @click="open = !open" class="text-slate-800 dark:text-white focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div x-show="open" class="lg:hidden bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-white/20">
+            <div class="px-4 py-4 space-y-3">
+                <a href="#about" class="block font-medium text-slate-700 dark:text-slate-300">About</a>
+                <a href="#arsenal" class="block font-medium text-slate-700 dark:text-slate-300">Arsenal</a>
+                <a href="#experience" class="block font-medium text-slate-700 dark:text-slate-300">Experience</a>
+                <a href="#projects" class="block font-medium text-slate-700 dark:text-slate-300">Projects</a>
+                <a href="#education" class="block font-medium text-slate-700 dark:text-slate-300">Education</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="about" class="pt-32 pb-20 lg:pt-48 lg:pb-32 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row items-center gap-16 relative z-10">
+            <div class="lg:w-1/2 text-center lg:text-left">
+                <div data-aos="fade-up" data-aos-delay="0" class="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 text-xs font-bold tracking-widest text-primary uppercase">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> 6+ Years Experience
+                </div>
+                
+                <h1 data-aos="fade-up" data-aos-delay="100" class="text-5xl lg:text-7xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6">
+                    Md Asif <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">Rahman</span>
+                </h1>
+                
+                <p data-aos="fade-up" data-aos-delay="200" class="text-xl lg:text-2xl text-slate-600 dark:text-slate-300 mb-8 font-light leading-relaxed">
+                    Assistant Manager & Senior Software Architect with <span class="font-semibold text-slate-900 dark:text-white">6+ years of experience</span> leading high-performance teams. 
+                    <span class="font-semibold text-slate-900 dark:text-white">Certified ScrumMaster®</span> driving <strong>Microservices migration</strong> and <strong>Cloud Native</strong> solutions for <strong>100k+ concurrent users</strong>. 
+                    Expert in <strong>Laravel</strong>, <strong>Go</strong>, and <strong>AWS</strong>, specializing in building resilient, enterprise-grade distributed systems.
+                </p>
+                
+                <div data-aos="fade-up" data-aos-delay="300" class="flex flex-wrap justify-center lg:justify-start gap-3 mb-8">
+                    <div class="flex items-center gap-2 px-4 py-2 glass-card sim-frost backdrop-blur rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        <i class="fas fa-users text-blue-600 dark:text-blue-400"></i> Team Leadership
+                    </div>
+                    <div class="flex items-center gap-2 px-4 py-2 glass-card sim-frost backdrop-blur rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        <i class="fas fa-sync-alt text-green-600 dark:text-green-400"></i> Agile / CSM®
+                    </div>
+                    <div class="flex items-center gap-2 px-4 py-2 glass-card sim-frost backdrop-blur rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        <i class="fas fa-chalkboard-teacher text-orange-600 dark:text-orange-400"></i> Mentorship
+                    </div>
+                </div>
+
+                <div data-aos="fade-up" data-aos-delay="400" class="flex flex-wrap justify-center lg:justify-start gap-3 md:gap-4">
+                    <a href="https://linkedin.com/in/itsasifme" target="_blank" class="glass-card sim-frost hover:-translate-y-1 transition px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm text-slate-700 dark:text-white font-bold flex items-center gap-2">
+                        <i class="fab fa-linkedin text-blue-700 dark:text-blue-400"></i> LinkedIn
+                    </a>
+                    <a href="https://www.hackerrank.com/profile/itsasifme" target="_blank" class="glass-card sim-frost hover:-translate-y-1 transition px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm text-slate-700 dark:text-white font-bold flex items-center gap-2">
+                        <i class="fab fa-hackerrank text-green-500"></i> HackerRank
+                    </a>
+                    <a href="https://github.com/itsasifme" target="_blank" class="glass-card sim-frost hover:-translate-y-1 transition px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm text-slate-700 dark:text-white font-bold flex items-center gap-2">
+                        <i class="fab fa-github text-slate-900 dark:text-white"></i> GitHub
+                    </a>
+                </div>
+            </div>
+            
+            <div class="lg:w-1/2 relative flex justify-center" data-aos="zoom-in" data-aos-duration="1000">
+                <div class="relative w-72 h-72 lg:w-[450px] lg:h-[450px]">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-full blur-2xl opacity-20 animate-pulse"></div>
+                    <div class="absolute inset-2 bg-white/10 dark:bg-slate-800/20 backdrop-blur-md rounded-full p-2 shadow-2xl border border-white/20">
+                        <img src="https://s3.ap-south-1.amazonaws.com/itsasif.me/Selfie+Blue.png" alt="Asif Rahman" class="w-full h-full object-cover rounded-full border border-slate-100/50 dark:border-slate-700/50">
+                    </div>
+                    <div class="absolute bottom-10 -left-4 glass-card sim-frost backdrop-blur p-3 rounded-xl shadow-badge border border-slate-100 dark:border-slate-700 flex items-center gap-3 float-slow z-20 max-w-[200px]">
+                        <div class="bg-orange-50 dark:bg-orange-900/30 p-2 rounded-lg">
+                            <i class="devicon-amazonwebservices-plain-wordmark colored text-3xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-slate-400 dark:text-slate-400 font-bold uppercase tracking-wider">Cloud Expert</div>
+                            <div class="text-sm font-bold text-slate-900 dark:text-white">AWS Solutions</div>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-16 -right-2 glass-card sim-frost backdrop-blur p-3 rounded-xl shadow-badge border border-slate-100 dark:border-slate-700 flex items-center gap-3 float-delayed z-20 max-w-[200px]">
+                        <div class="bg-red-50 dark:bg-red-900/30 p-2 rounded-lg">
+                            <i class="devicon-laravel-original colored text-3xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-slate-400 dark:text-slate-400 font-bold uppercase tracking-wider">Core Stack</div>
+                            <div class="text-sm font-bold text-slate-900 dark:text-white">Laravel Expert</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="arsenal" class="py-24 bg-transparent transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl font-bold text-slate-900 dark:text-white tracking-tight">Technical Arsenal</h2>
+                <p class="mt-4 text-slate-500 dark:text-slate-400 text-lg">Expertise across the full stack</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <div class="skill-card glass-card sim-frost group p-8 rounded-3xl border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out motion-safe:transform-gpu hover:-translate-y-3 hover:scale-105 hover:shadow-2xl">
+                        <h3 class="font-bold text-xl text-slate-900 dark:text-white mb-6 pb-3 border-b border-slate-200/50 dark:border-slate-700/50">Backend</h3>
+                        <div class="grid grid-cols-3 gap-6">
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-php-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">PHP</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-laravel-original colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Laravel</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-go-original-wordmark colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Go</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-satellite-dish text-4xl text-teal-600 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Echo</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-mysql-original colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">MySQL</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-postgresql-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Postgres</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-sqlite-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">SQLite</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-redis-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Redis</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-rabbitmq-original colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">RabbitMQ</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-apachekafka-original colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Kafka</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-cloud text-4xl text-sky-500 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">RESTful</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-envelope-open-text text-4xl text-indigo-500 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">SOAP</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <div class="skill-card glass-card sim-frost group p-8 rounded-3xl border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out motion-safe:transform-gpu hover:-translate-y-3 hover:scale-105 hover:shadow-2xl">
+                        <h3 class="font-bold text-xl text-slate-900 dark:text-white mb-6 pb-3 border-b border-slate-200/50 dark:border-slate-700/50">Frontend</h3>
+                        <div class="grid grid-cols-3 gap-6">
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-vuejs-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Vue.js</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-react-original colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">React</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-nextjs-plain text-4xl text-slate-900 dark:text-white icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Next.js</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-nuxtjs-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Nuxt</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-typescript-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">TS</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-javascript-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">JS</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-jquery-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">jQuery</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-vitejs-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Vite</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-tailwindcss-original colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Tailwind</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-bootstrap-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Bootstrap</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-sass-original colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">SCSS</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-css3-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">CSS</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <div class="skill-card glass-card sim-frost group p-8 rounded-3xl border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out motion-safe:transform-gpu hover:-translate-y-3 hover:scale-105 hover:shadow-2xl">
+                        <h3 class="font-bold text-xl text-slate-900 dark:text-white mb-6 pb-3 border-b border-slate-200/50 dark:border-slate-700/50">Design Patterns</h3>
+                        <div class="grid grid-cols-3 gap-6">
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-project-diagram text-3xl text-blue-500 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Microservices</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-sitemap text-3xl text-purple-500 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">MVC</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-cube text-3xl text-green-500 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">DDD</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-exchange-alt text-3xl text-orange-500 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">CQRS</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-vial text-3xl text-red-500 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">TDD</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-hammer text-3xl text-yellow-600 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Builder</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-chess-pawn text-3xl text-indigo-500 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Singleton</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-industry text-3xl text-slate-600 dark:text-slate-400 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Factory</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-cogs text-3xl text-teal-600 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Abstract Factory</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-eye text-3xl text-cyan-600 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Observer</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-chess-knight text-3xl text-rose-600 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Strategy</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-plug text-3xl text-amber-500 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Adapter</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div data-aos="fade-up" data-aos-delay="400">
+                    <div class="skill-card glass-card sim-frost group p-8 rounded-3xl border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out motion-safe:transform-gpu hover:-translate-y-3 hover:scale-105 hover:shadow-2xl">
+                        <h3 class="font-bold text-xl text-slate-900 dark:text-white mb-6 pb-3 border-b border-slate-200/50 dark:border-slate-700/50">DevOps</h3>
+                        <div class="grid grid-cols-3 gap-6">
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-amazonwebservices-plain-wordmark colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">AWS</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-docker-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Docker</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-kubernetes-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">K8s</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-linux-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Linux</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-nginx-original colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">NGINX</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-apache-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Apache</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-githubactions-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Actions</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-grafana-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Grafana</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-prometheus-original colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Prometheus</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="fas fa-tasks text-4xl text-green-600 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Supervisor</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-datadog-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Datadog</span></div>
+                            <div class="flex flex-col items-center gap-3 group"><i class="devicon-elasticsearch-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">ELK</span></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div data-aos="fade-up" data-aos-delay="500">
+                <div class="skill-card glass-card sim-frost group p-8 rounded-3xl border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out motion-safe:transform-gpu hover:-translate-y-3 hover:scale-105 hover:shadow-2xl">
+                    <h3 class="font-bold text-xl text-slate-900 dark:text-white mb-6 pb-3 border-b border-slate-200/50 dark:border-slate-700/50">Tools & Workflow</h3>
+                    <div class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-6">
+                        <div class="flex flex-col items-center gap-3 group"><i class="devicon-git-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Git</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="devicon-gitlab-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">GitLab</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="devicon-github-original colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">GitHub</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="fas fa-robot text-4xl text-indigo-500 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Copilot</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="devicon-bitbucket-original colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Bitbucket</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="devicon-jira-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Jira</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="fa-brands fa-confluence text-4xl text-blue-600 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Confluence</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="devicon-slack-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Slack</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="devicon-vscode-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">VS Code</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="devicon-postman-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Postman</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="devicon-swagger-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Swagger</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="fas fa-ellipsis-h text-4xl text-pink-500 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Asana</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="fas fa-sticky-note text-4xl text-yellow-400 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Miro</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="fas fa-briefcase text-4xl text-amber-600 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Zoho</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="devicon-google-plain colored text-4xl icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">G-Suite</span></div>
+                        <div class="flex flex-col items-center gap-3 group"><i class="fa-brands fa-microsoft text-4xl text-orange-600 icon-hover"></i><span class="text-xs font-medium text-slate-500 dark:text-slate-400">Office</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="experience" class="py-24 bg-transparent border-t border-slate-200/20 dark:border-slate-800/20 transition-colors duration-300">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-12 text-center" data-aos="fade-up">Professional Journey</h2>
+            
+            <div class="space-y-12">
+                <div class="relative pl-10 border-l-2 border-primary" data-aos="fade-left">
+                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary ring-4 ring-blue-100 dark:ring-blue-900"></div>
+                    <div class="glass-card sim-frost group p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out motion-safe:transform-gpu hover:-translate-y-3 hover:shadow-2xl" data-aos="fade-left">
+                        <div class="flex flex-col md:flex-row justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Assistant Manager <span class="text-slate-400 dark:text-slate-500 font-normal">@ Adventure Dhaka Ltd</span></h3>
+                            <span class="text-sm font-bold text-primary bg-blue-50/50 dark:bg-blue-900/30 px-3 py-1 rounded-full whitespace-nowrap mt-2 md:mt-0">2023 - Present</span>
+                        </div>
+                        <ul class="list-disc list-inside text-slate-600 dark:text-slate-300 space-y-2 text-sm mt-4 leading-relaxed">
+                            <li><strong class="text-slate-800 dark:text-slate-200">Leadership:</strong> Led team of 8 developers.</li>
+                            <li><strong class="text-slate-800 dark:text-slate-200">Microservices:</strong> Architected NDC, GDS & Hotel CMS services.</li>
+                            <li><strong class="text-slate-800 dark:text-slate-200">Scale:</strong> Managed 100,000+ concurrent users.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="relative pl-10 border-l-2 border-slate-300 dark:border-slate-600" data-aos="fade-left" data-aos-delay="100">
+                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-400 dark:bg-slate-600"></div>
+                    <div class="glass-card sim-frost group p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out motion-safe:transform-gpu hover:-translate-y-3 hover:shadow-2xl" data-aos="fade-left" data-aos-delay="100">
+                        <div class="flex flex-col md:flex-row justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Software Engineer <span class="text-slate-400 dark:text-slate-500 font-normal">@ UnlockLive IT Ltd</span></h3>
+                            <span class="text-sm font-bold text-slate-500 dark:text-slate-400 bg-slate-100/50 dark:bg-slate-700/50 px-3 py-1 rounded-full whitespace-nowrap mt-2 md:mt-0">2020 - 2022</span>
+                        </div>
+                        <ul class="list-disc list-inside text-slate-600 dark:text-slate-300 space-y-2 text-sm mt-4 leading-relaxed">
+                            <li>Developed ERP systems and Amazon lead analyzers.</li>
+                            <li>Achieved 90% code coverage by introducing automated testing.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="relative pl-10 border-l-2 border-slate-300 dark:border-slate-600" data-aos="fade-left" data-aos-delay="200">
+                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-400 dark:bg-slate-600"></div>
+                    <div class="glass-card sim-frost group p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out motion-safe:transform-gpu hover:-translate-y-3 hover:shadow-2xl" data-aos="fade-left" data-aos-delay="200">
+                        <div class="flex flex-col md:flex-row justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Software Engineer <span class="text-slate-400 dark:text-slate-500 font-normal">@ ST Solutions Int.</span></h3>
+                            <span class="text-sm font-bold text-slate-500 dark:text-slate-400 bg-slate-100/50 dark:bg-slate-700/50 px-3 py-1 rounded-full whitespace-nowrap mt-2 md:mt-0">2019</span>
+                        </div>
+                        <ul class="list-disc list-inside text-slate-600 dark:text-slate-300 space-y-2 text-sm mt-4 leading-relaxed">
+                            <li>Built aviation ticketing systems (1000+ trans/hour).</li>
+                            <li>Designed RESTful APIs for mobile apps (50k+ users).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-24 bg-transparent border-t border-slate-200/20 dark:border-slate-800/20 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-12 text-center" data-aos="fade-up">Featured Projects</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="group glass-card sim-frost rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-700 hover:shadow-xl transition flex flex-col h-full border-t-4 border-t-blue-500" data-aos="fade-up" data-aos-delay="0">
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">skyticket.jp</h3>
+                            <span class="text-xs font-bold text-primary bg-blue-50/50 dark:bg-blue-900/30 px-2 py-1 rounded">Architect</span>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-6 flex-1">
+                            Lead Backend Architect for a major Japanese OTA. Designed microservices, integrated Kafka & Elasticsearch.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 text-xs bg-slate-100/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 rounded">Laravel</span>
+                            <span class="px-2 py-1 text-xs bg-slate-100/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 rounded">Go</span>
+                            <span class="px-2 py-1 text-xs bg-slate-100/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 rounded">AWS</span>
+                        </div>
+                        <a href="https://skyticket.jp" target="_blank" class="text-primary font-semibold text-sm hover:underline">View Live <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+
+                <div class="group glass-card sim-frost rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-700 hover:shadow-xl transition flex flex-col h-full border-t-4 border-t-green-500" data-aos="fade-up" data-aos-delay="100">
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Inventory SaaS</h3>
+                            <span class="text-xs font-bold text-green-600 dark:text-green-400 bg-green-50/50 dark:bg-green-900/30 px-2 py-1 rounded">Full Stack</span>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-6 flex-1">
+                            Comprehensive SaaS (sellerwiz.io). Integrated Stripe payments and Google Analytics.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 text-xs bg-slate-100/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 rounded">Yii2</span>
+                            <span class="px-2 py-1 text-xs bg-slate-100/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 rounded">Vue.js</span>
+                            <span class="px-2 py-1 text-xs bg-slate-100/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 rounded">Stripe</span>
+                        </div>
+                        <a href="https://sellerwiz.io" target="_blank" class="text-green-600 font-semibold text-sm hover:underline">View Live <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+
+                <div class="group glass-card sim-frost rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-700 hover:shadow-xl transition flex flex-col h-full border-t-4 border-t-purple-500" data-aos="fade-up" data-aos-delay="200">
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">US Bangla App</h3>
+                            <span class="text-xs font-bold text-purple-600 dark:text-purple-400 bg-purple-50/50 dark:bg-purple-900/30 px-2 py-1 rounded">API Dev</span>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-6 flex-1">
+                            Backend API for official airline app. Implemented OAuth2.0 and payment gateways.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 text-xs bg-slate-100/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 rounded">Laravel</span>
+                            <span class="px-2 py-1 text-xs bg-slate-100/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 rounded">Firebase</span>
+                            <span class="px-2 py-1 text-xs bg-slate-100/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 rounded">OAuth2</span>
+                        </div>
+                        <a href="#" class="text-purple-600 font-semibold text-sm hover:underline">View App Store <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="py-24 bg-transparent border-t border-slate-200/20 dark:border-slate-800/20 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12">
+                
+                <div data-aos="fade-right">
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <i class="fas fa-graduation-cap text-slate-400"></i> Education & Certifications
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="glass-card sim-frost group p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out motion-safe:transform-gpu hover:-translate-y-3 hover:shadow-2xl">
+                            <h4 class="font-bold text-slate-900 dark:text-white">B.Sc in Computer Science & Engineering</h4>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Daffodil International University</p>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">GPA: 3.79 / 4.00</p>
+                        </div>
+                        <div class="glass-card sim-frost group p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out motion-safe:transform-gpu hover:-translate-y-3 hover:shadow-2xl">
+                            <h4 class="font-bold text-slate-900 dark:text-white">Certified ScrumMaster® (CSM)</h4>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Scrum Alliance</p>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Jun 2025 - Jun 2027</p>
+                        </div>
+                        <div class="glass-card sim-frost group p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out motion-safe:transform-gpu hover:-translate-y-3 hover:shadow-2xl">
+                            <h4 class="font-bold text-slate-900 dark:text-white">Advanced SQL</h4>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">HackerRank</p>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Jan 2025</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div data-aos="fade-left">
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <i class="fas fa-trophy text-yellow-500"></i> Recognition
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 glass-card sim-frost p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out hover:-translate-y-3 hover:scale-105 hover:shadow-2xl motion-safe:transform-gpu group">
+                            <div class="bg-yellow-50/50 dark:bg-yellow-900/30 text-yellow-500 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-500 group-hover:scale-110">
+                                <i class="fas fa-star text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Best Integrity Award</h4>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Adventure Dhaka Limited</p>
+                                <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Jul 2024</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 glass-card sim-frost p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out hover:-translate-y-3 hover:scale-105 hover:shadow-2xl motion-safe:transform-gpu group">
+                            <div class="bg-blue-50/50 dark:bg-blue-900/30 text-blue-500 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-500 group-hover:scale-110">
+                                <i class="fas fa-user-tie text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Best Employee Award</h4>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Adventure Dhaka Limited</p>
+                                <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Feb 2024</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 glass-card sim-frost p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-transform duration-500 ease-out hover:-translate-y-3 hover:scale-105 hover:shadow-2xl motion-safe:transform-gpu group">
+                            <div class="bg-green-50/50 dark:bg-green-900/30 text-green-500 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-500 group-hover:scale-110">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Best Teamwork Award</h4>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Adventure Dhaka Limited</p>
+                                <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Jul 2023</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact" class="bg-slate-900 dark:bg-black text-white py-16 border-t border-slate-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-8">Let's Build Scalable Solutions</h2>
+            <div class="flex justify-center gap-8 mb-8">
+                <a href="mailto:eng.asifrahman@gmail.com" class="text-4xl hover:text-primary transition transform hover:scale-110"><i class="fas fa-envelope-square"></i></a>
+                <a href="https://linkedin.com/in/itsasifme" class="text-4xl hover:text-primary transition transform hover:scale-110"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/itsasifme" class="text-4xl hover:text-primary transition transform hover:scale-110"><i class="fab fa-github-square"></i></a>
+            </div>
+            <p class="text-slate-500 text-sm">© 2025 Md Asif Rahman. All Rights Reserved. Dhaka, Bangladesh.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Init Animation
+        AOS.init({
+            once: true,
+            offset: 50,
+            duration: 800,
+            easing: 'ease-out-cubic',
+        });
+
+        // Remove inline transforms AOS leaves on elements so :hover CSS can override them
+        // Timeout covers AOS duration + delays; adjust if you change AOS timings
+        // setTimeout(() => {
+        //     document.querySelectorAll('[data-aos]').forEach(el => {
+        //         // only clear transform style if present
+        //         if (el.style && el.style.transform) el.style.transform = '';
+        //     });
+        // }, 1200);
+
+        // Dark Mode Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('theme-toggle-light-icon');
+        const moonIcon = document.getElementById('theme-toggle-dark-icon');
+        const html = document.documentElement;
+
+        // Check local storage or system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            sunIcon.classList.remove('hidden');
+        } else {
+            html.classList.remove('dark');
+            moonIcon.classList.remove('hidden');
+        }
+
+        // Toggle Event
+        toggleBtn.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            
+            if (html.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                localStorage.theme = 'light';
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+        });
+        
+        // Mobile Toggle Logic
+        const mobToggle = document.getElementById('theme-toggle-mobile');
+        const mobSun = document.getElementById('theme-toggle-light-icon-mobile');
+        const mobMoon = document.getElementById('theme-toggle-dark-icon-mobile');
+
+        // Initial Mobile Icon State
+        if (html.classList.contains('dark')) {
+            mobSun.classList.remove('hidden');
+        } else {
+            mobMoon.classList.remove('hidden');
+        }
+
+        mobToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            if (html.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+                mobSun.classList.remove('hidden');
+                mobMoon.classList.add('hidden');
+                // Sync desktop icons
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                localStorage.theme = 'light';
+                mobMoon.classList.remove('hidden');
+                mobSun.classList.add('hidden');
+                // Sync desktop icons
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+        });
+
+        // Interactive Canvas Network Effect
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        // Resize Canvas
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            initParticles();
+        }
+
+        // Particle Class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5; // Slow velocity
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = html.classList.contains('dark') ? 'rgba(255, 255, 255, 0.2)' : 'rgba(37, 99, 235, 0.2)'; // White/Blue based on theme
+                ctx.fill();
+            }
+        }
+
+        // Initialize Particles
+        function initParticles() {
+            particles = [];
+            const numParticles = Math.floor(width / 10); // Density based on width
+            for (let i = 0; i < numParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        // Track Mouse
+        const mouse = { x: null, y: null };
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // Animation Loop
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Determine Line Color based on Theme
+            const isDark = html.classList.contains('dark');
+            const lineColor = isDark ? '255, 255, 255' : '37, 99, 235'; // White vs Blue
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+
+                // Connect to Mouse
+                if (mouse.x != null) {
+                    const dx = p.x - mouse.x;
+                    const dy = p.y - mouse.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 150) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(${lineColor}, ${1 - distance / 150})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+
+                // Connect to Nearby Particles (Optional: for fuller net effect)
+                particles.forEach(p2 => {
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if(dist < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(${lineColor}, ${0.1 - dist/1000})`; // Very faint lines
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Event Listeners
+        window.addEventListener('resize', resize);
+        resize();
+        animate();
+
+        // Cursor Logic
+        const cursorDot = document.getElementById("cursor-dot");
+        const cursorOutline = document.getElementById("cursor-outline");
+
+        window.addEventListener("mousemove", (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            cursorOutline.style.left = `${posX}px`;
+            cursorOutline.style.top = `${posY}px`;
+        });
+
+        const hoverTargets = document.querySelectorAll("a, button, input, .skill-card");
+        hoverTargets.forEach(target => {
+            target.addEventListener("mouseenter", () => document.body.classList.add("hovering"));
+            target.addEventListener("mouseleave", () => document.body.classList.remove("hovering"));
+        });
+    </script>
+</body>
+</html>
