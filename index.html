@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Md Asif Rahman | Senior Software Architect</title>
-    
+    <link rel="icon" type="image/x-icon" href="https://s3.ap-south-1.amazonaws.com/itsasif.me/favicon.ico">
+
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
@@ -633,12 +634,12 @@
 
         // Remove inline transforms AOS leaves on elements so :hover CSS can override them
         // Timeout covers AOS duration + delays; adjust if you change AOS timings
-        // setTimeout(() => {
-        //     document.querySelectorAll('[data-aos]').forEach(el => {
-        //         // only clear transform style if present
-        //         if (el.style && el.style.transform) el.style.transform = '';
-        //     });
-        // }, 1200);
+        setTimeout(() => {
+            document.querySelectorAll('[data-aos]').forEach(el => {
+                // only clear transform style if present
+                if (el.style && el.style.transform) el.style.transform = '';
+            });
+        }, 1200);
 
         // Dark Mode Logic
         const toggleBtn = document.getElementById('theme-toggle');
